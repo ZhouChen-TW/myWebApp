@@ -19,6 +19,12 @@ namespace MyApp
         static void RegisterRoutes(HttpConfiguration httpConfiguration)
         {
             httpConfiguration.Routes.MapHttpRoute(
+                "get message by id",
+                "message/{id}",
+                new { controller = "Message", action = "GetMessageById" },
+                new { httpMethod = new HttpMethodConstraint(HttpMethod.Get), id=@"\d+"});
+
+            httpConfiguration.Routes.MapHttpRoute(
                 "get message",
                 "message",
                 new {controller = "Message", action = "GetMessage"},

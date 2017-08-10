@@ -19,5 +19,12 @@ namespace MyApp
             var message = messageGenerate.getMessage();
             return Request.CreateResponse(HttpStatusCode.OK, new MessageDto {Message = message});
         }
+
+        [HttpGet]
+        public HttpResponseMessage GetMessageById(long id)
+        {
+            var message = $"I am {id}";
+            return Request.CreateResponse(HttpStatusCode.OK, new MessageDto { Message = message });
+        }
     }
 }
