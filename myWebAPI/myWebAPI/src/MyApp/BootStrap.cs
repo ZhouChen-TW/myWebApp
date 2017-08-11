@@ -9,11 +9,23 @@ namespace MyApp
 {
     public class BootStrap
     {
-        public static void Initialize(HttpConfiguration httpConfiguration)
+        readonly ContainerBuilder containerBuilder;
+
+        public BootStrap(ContainerBuilder containerBuilder)
         {
-            IContainer container = CreateRootScope();
-            httpConfiguration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            this.containerBuilder = containerBuilder;
+        }
+
+        public void Initialize(HttpConfiguration httpConfiguration)
+        {
+            RegisterFilters(httpConfiguration);
             RegisterRoutes(httpConfiguration);
+            BuilderContainers();
+        }
+
+        static void RegisterFilters(HttpConfiguration httpConfiguration)
+        {
+            httpConfiguration.Filters.Add(new ActionFilter());
         }
 
         static void RegisterRoutes(HttpConfiguration httpConfiguration)
@@ -31,17 +43,16 @@ namespace MyApp
                 new {httpMethod = new HttpMethodConstraint(HttpMethod.Get)});
         }
 
-        static IContainer CreateRootScope()
+        void BuilderContainers()
         {
-            var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            RegisterModules(containerBuilder);
-            return containerBuilder.Build();
+            RegisterModules();
         }
 
-        static void RegisterModules(ContainerBuilder containerBuilder)
+         void RegisterModules()
         {
             containerBuilder.RegisterType<MessageGenerate>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<NLogger>().As<INLogger>().InstancePerLifetimeScope();
         }
     }
 }
