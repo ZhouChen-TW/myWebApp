@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -11,16 +12,17 @@ namespace MyApp
     {
         readonly ContainerBuilder containerBuilder;
 
-        public BootStrap(ContainerBuilder containerBuilder)
+        public BootStrap()
         {
-            this.containerBuilder = containerBuilder;
+            containerBuilder = new ContainerBuilder();
         }
 
+        public Action<ContainerBuilder> OnBuildContainerBuilder { get; set; }
         public void Initialize(HttpConfiguration httpConfiguration)
         {
             RegisterFilters(httpConfiguration);
             RegisterRoutes(httpConfiguration);
-            BuilderContainers();
+            BuilderContainers(httpConfiguration);
         }
 
         static void RegisterFilters(HttpConfiguration httpConfiguration)
@@ -43,13 +45,15 @@ namespace MyApp
                 new {httpMethod = new HttpMethodConstraint(HttpMethod.Get)});
         }
 
-        void BuilderContainers()
+        void BuilderContainers(HttpConfiguration httpConfiguration)
         {
             containerBuilder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             RegisterModules();
+            OnBuildContainerBuilder(containerBuilder);
+            httpConfiguration.DependencyResolver = new AutofacWebApiDependencyResolver(containerBuilder.Build());
         }
 
-         void RegisterModules()
+        void RegisterModules()
         {
             containerBuilder.RegisterType<MessageGenerate>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<NLogger>().As<INLogger>().InstancePerLifetimeScope();

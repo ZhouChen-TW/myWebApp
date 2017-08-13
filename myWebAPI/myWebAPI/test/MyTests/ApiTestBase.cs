@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Web.Http;
 using Autofac;
-using Autofac.Integration.WebApi;
 using MyApp;
 
 namespace MyTests
@@ -10,21 +9,12 @@ namespace MyTests
     public class ApiTestBase : IDisposable
     {
         readonly HttpConfiguration httpConfiguration = new HttpConfiguration();
-        readonly ContainerBuilder myBuilder = new ContainerBuilder();
-        IContainer myContainer;
         HttpClient httpClient;
         HttpServer httpServer;
 
-        public ApiTestBase()
-        {
-            new BootStrap(myBuilder).Initialize(httpConfiguration);
-        }
-
         protected void RegisterFakeInstance(Action<ContainerBuilder> action)
         {
-            action(myBuilder);
-            myContainer = myBuilder.Build();
-            httpConfiguration.DependencyResolver = new AutofacWebApiDependencyResolver(myContainer);
+            new BootStrap{OnBuildContainerBuilder = action}.Initialize(httpConfiguration);
             httpServer = new HttpServer(httpConfiguration);
         }
 
