@@ -14,7 +14,7 @@ namespace MyTests
         public async Task should_return_ok_with_message_when_get_message()
         {
             var mockLogger = new Mock<NLogger>();
-            RegisterFakeInstance(c => c.Register(o => mockLogger.Object).As<INLogger>().InstancePerLifetimeScope());
+            RegisterFakeInstance(c => c.RegisterInstance(mockLogger.Object).As<INLogger>());
 
             var client = CreateHttpClient();
             var response = await client.GetAsync("/message");
@@ -30,7 +30,7 @@ namespace MyTests
         public async Task should_return_ok_with_message_when_get_message_by_id()
         {
             var mockLogger = new Mock<NLogger>();
-            RegisterFakeInstance(c => c.Register(o => mockLogger.Object).As<INLogger>());
+            RegisterFakeInstance(c => c.RegisterInstance(mockLogger.Object).As<INLogger>());
 
             var client = CreateHttpClient();
             var response = await client.GetAsync("/message/1");
