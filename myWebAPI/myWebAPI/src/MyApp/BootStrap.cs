@@ -18,11 +18,18 @@ namespace MyApp
         }
 
         public Action<ContainerBuilder> OnBuildContainerBuilder { get; set; }
+
         public void Initialize(HttpConfiguration httpConfiguration)
         {
             RegisterFilters(httpConfiguration);
+            RegisterHandlers(httpConfiguration);
             RegisterRoutes(httpConfiguration);
             BuilderContainers(httpConfiguration);
+        }
+
+        static void RegisterHandlers(HttpConfiguration httpConfiguration)
+        {
+            httpConfiguration.MessageHandlers.Add(new CurrentRequesHandler());
         }
 
         static void RegisterFilters(HttpConfiguration httpConfiguration)

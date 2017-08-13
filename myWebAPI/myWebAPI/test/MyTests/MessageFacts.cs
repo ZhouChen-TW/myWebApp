@@ -23,6 +23,7 @@ namespace MyTests
             Assert.Equal("Hello", messageDto.Message);
 
             mockLogger.Verify(l => l.Info(It.Is<string>(e => e.Contains("Message GetMessage stop watch"))), Times.Once);
+            mockLogger.Verify(l => l.Info(It.Is<string>(e => e.Contains("/message stop watch"))), Times.Once);
         }
 
         [Fact]
@@ -38,6 +39,7 @@ namespace MyTests
             Assert.Equal("I am 1", messageDto.Message);
 
             mockLogger.Verify(l => l.Info(It.Is<string>(e => e.Contains("Message GetMessageById stop watch"))), Times.Once);
+            mockLogger.Verify(l => l.Info(It.Is<string>(e => e.Contains("/message/1 stop watch"))), Times.Once);
         }
     }
 }
