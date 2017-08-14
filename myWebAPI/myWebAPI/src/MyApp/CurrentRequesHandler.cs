@@ -15,12 +15,14 @@ namespace MyApp
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            var responseMessage = base.SendAsync(request, cancellationToken).Result;
-
-            stopWatch.Stop();
-            logger.Info($"{request.RequestUri} stop watch {stopWatch.Elapsed.TotalMilliseconds} ms");
-
-            return Task.FromResult(responseMessage);
+            return base.SendAsync(request, cancellationToken).ContinueWith(
+                t =>
+                {
+                    stopWatch.Stop();
+                    logger.Info($"{request.RequestUri} stop watch {stopWatch.Elapsed.TotalMilliseconds} ms");
+                    return t.Result;
+                },
+                cancellationToken);
         }
     }
 }
