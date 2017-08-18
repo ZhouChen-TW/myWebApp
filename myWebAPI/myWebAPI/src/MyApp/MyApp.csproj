@@ -103,7 +103,7 @@
   <ItemGroup>
     <Compile Include="ActionFilter.cs" />
     <Compile Include="BootStrap.cs" />
-    <Compile Include="CurrentRequesHandler.cs" />
+    <Compile Include="CurrentRequestHandler.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

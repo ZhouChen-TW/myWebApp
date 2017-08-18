@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyApp
 {
-    public class CurrentRequesHandler : DelegatingHandler
+    public class CurrentRequestHandler : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -22,7 +22,7 @@ namespace MyApp
                     logger.Info($"{request.RequestUri} stop watch {stopWatch.Elapsed.TotalMilliseconds} ms");
                     return t.Result;
                 },
-                cancellationToken);
+                TaskContinuationOptions.OnlyOnRanToCompletion);
         }
     }
 }

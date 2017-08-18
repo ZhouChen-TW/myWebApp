@@ -29,7 +29,7 @@ namespace MyApp
 
         static void RegisterHandlers(HttpConfiguration httpConfiguration)
         {
-            httpConfiguration.MessageHandlers.Add(new CurrentRequesHandler());
+            httpConfiguration.MessageHandlers.Add(new CurrentRequestHandler());
         }
 
         static void RegisterFilters(HttpConfiguration httpConfiguration)
